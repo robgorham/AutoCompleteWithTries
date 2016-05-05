@@ -11,7 +11,7 @@ class Trie
 		def initialize(identifier = '')
 			@ident = identifier
 			@nodelist = {}
-			@data =false
+			@data = false
 		end
 
 		def AddNode(key, newLeaf)
@@ -28,69 +28,70 @@ class Trie
 		end
 
 
+		#Accessors
 		def GetNode(idx)
-			@nodelist[idx]
-		
+			@nodelist[idx]		
 		end
-		def GetData()
+
+		def GetData
 			@data
 		end
 
-		def NodeList()
+		def NodeList
 			@nodelist
 		end
 
-		def GetIndex()
+		def GetIndex
 			@ident
 		end 
 	end	
-	def initialize()
+	def initialize
 		@root = Node.new
 	end
 
 	
 	def AddFile(filename)
 		dict = open(filename)
-		words = dict.read()
+		words = dict.read
 		list = words.split("\n")
 		list.each do |word|
 			AddWord(word)
-		end
+		end		
 	end
 
 	#adds word to Structure
 	def AddWord(word)
-		AddWordHelper(word, word,@root)
+		AddWordHelper(word, word, @root)
 	end
 	
-	def AddWordHelper(word, wordsleft,currNode )
+	def AddWordHelper(word, wordsleft, currNode )
 
 		if wordsleft.size == 0
 			currNode.SetData(true) #set the end of a word
 			return
 		end
 		temp = currNode.AddNode(wordsleft[0], Node.new(wordsleft[0]))
-		AddWordHelper(word,wordsleft[1...word.size], currNode.AddNode(temp.GetIndex, temp))
+		AddWordHelper(word, wordsleft[1...word.size], currNode.AddNode(temp.GetIndex, temp))
 	end
 
 	
 	
 
 	#returns ARray of all Strin gs
-	def GetAll()
-		GetAllWords(@root)
-		
+	def GetAll
+		GetAllWords(@root)		
 	end
+
 	def GetAllWords(node, currWord= "")
 		words = []
-		if (node.GetData() == true)
-			words +=[ ( currWord + node.GetIndex().to_s) ]
+		if (node.GetData == true)
+			words +=[(currWord + node.GetIndex.to_s)]
 		end
-		if node.NodeList().size == 0
+		if node.NodeList.size == 0
 			return words
 		end		
-		currWord += node.GetIndex().to_s
-		myNodeArray = node.NodeList()
+		currWord += node.GetIndex.to_s
+		myNodeArray = node.NodeList
 		myNodeArray.each do |key, n|
 		
 			words += GetAllWords(n, currWord.to_s)
@@ -99,18 +100,18 @@ class Trie
 	end
 
 	##To output all of the words! in strings
-	def to_s()
+	def to_s
 		to_sHelper(@root, "")
 	end
 	
 	def to_sHelper(node,currWord="")
 		results = ""
-		if (node.GetData() == true) #if this node is the endpoint of a word
-			results = currWord + node.GetIndex().to_s + "\n"
+		if (node.GetData == true) #if this node is the endpoint of a word
+			results = currWord + node.GetIndex.to_s + "\n"
 		end
-		if node.NodeList().size > 0
-			currWord += node.GetIndex().to_s
-			myNodeArray = node.NodeList()
+		if node.NodeList.size > 0
+			currWord += node.GetIndex.to_s
+			myNodeArray = node.NodeList
 			myNodeArray.each do |key, n|
 				results = results + to_sHelper(n, currWord.to_s)
 			end	
