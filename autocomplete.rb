@@ -1,46 +1,54 @@
-class Node
-	def initialize(identifier = '')
-		@ident = identifier
-		@nodelist = {}
-		@data =false
-	end
 
-	def AddNode(key, newLeaf)
-		if @nodelist[key] != nil
-			return @nodelist[key]
-		end
-		@nodelist[key] = Node.new(key)		
-		
-		@nodelist[key]
-	end
-
-	def SetData(data)
-		@data = data
-	end
-
-
-	def GetNode(idx)
-		@nodelist[idx]
-	
-	end
-	def GetData()
-		@data
-	end
-
-	def NodeList()
-		@nodelist
-	end
-
-	def GetIndex()
-		@ident
-	end
-end	
+#Robert Gorham 2016
+#Declare a Trie by 
+# myTrie = Trie.new
+#Add Words myTrie.AddWord("Foobar")
+#Find Possibles by myTrie.FindPossibles(string)
+#Also  myTrie.to_s  gives all words as a string
+#You can find any piece of data in this 
 class Trie
+	class Node
+		def initialize(identifier = '')
+			@ident = identifier
+			@nodelist = {}
+			@data =false
+		end
 
+		def AddNode(key, newLeaf)
+			if @nodelist[key] != nil
+				return @nodelist[key]
+			end
+			@nodelist[key] = Node.new(key)		
+			
+			@nodelist[key]
+		end
+
+		def SetData(data)
+			@data = data
+		end
+
+
+		def GetNode(idx)
+			@nodelist[idx]
+		
+		end
+		def GetData()
+			@data
+		end
+
+		def NodeList()
+			@nodelist
+		end
+
+		def GetIndex()
+			@ident
+		end 
+	end	
 	def initialize()
 		@root = Node.new
 	end
 
+	#adds word to Structure
 	def AddWord(word)
 		AddWordHelper(word, word,@root)
 	end
@@ -55,6 +63,7 @@ class Trie
 		AddWordHelper(word,wordsleft[1...word.size], currNode.AddNode(temp.GetIndex, temp))
 	end
 
+	#returns ARray of all Strin gs
 	def GetAll()
 		GetAllWords(@root)
 		
@@ -76,6 +85,7 @@ class Trie
 		words
 	end
 
+	##To output all of the words! in strings
 	def to_s()
 		to_sHelper(@root, "")
 	end
@@ -121,7 +131,7 @@ class Trie
 end
 
 myTrie = Trie.new
-myTrie.AddWord("Dennis")
+myTrie.AddWord("Dennis") #how you add words
 myTrie.AddWord("Robert")
  myTrie.AddWord("Rodney")
 myTrie.AddWord("Hello")
@@ -129,5 +139,5 @@ myTrie.AddWord("Rodney DangerField")
 myTrie.AddWord("Felecia")
 myTrie.AddWord("Roxanne")
 myTrie.AddWord("Robot")
-puts myTrie.FindPossibles("Rob").to_s + "\n\n"
-puts myTrie.GetAll()
+puts myTrie.FindPossibles("Rob").to_s #findall the possibles
+puts myTrie.to_s
