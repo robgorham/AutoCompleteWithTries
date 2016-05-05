@@ -8,6 +8,18 @@
 #You can find any piece of data in this 
 class Trie
 	class Node
+		@ident
+		@nodelist
+		@data		
+
+		attr_accessor :data
+		attr_reader :nodelist
+		attr_accessor :ident
+		
+		def GetNode(idx)
+			@nodelist[idx]		
+		end
+
 		def initialize(identifier = '')
 			@ident = identifier
 			@nodelist = {}
@@ -22,29 +34,9 @@ class Trie
 			
 			@nodelist[key]
 		end
+	end
 
-		def SetData(data)
-			@data = data
-		end
-
-
-		#Accessors
-		def GetNode(idx)
-			@nodelist[idx]		
-		end
-
-		def GetData
-			@data
-		end
-
-		def NodeList
-			@nodelist
-		end
-
-		def GetIndex
-			@ident
-		end 
-	end	
+		
 	def initialize
 		@root = Node.new
 	end
@@ -67,15 +59,12 @@ class Trie
 	def AddWordHelper(word, wordsleft, currNode )
 
 		if wordsleft.size == 0
-			currNode.SetData(true) #set the end of a word
+			currNode.data = true #set the end of a word
 			return
 		end
 		temp = currNode.AddNode(wordsleft[0], Node.new(wordsleft[0]))
-		AddWordHelper(word, wordsleft[1...word.size], currNode.AddNode(temp.GetIndex, temp))
+		AddWordHelper(word, wordsleft[1...word.size], currNode.AddNode(temp.ident, temp))
 	end
-
-	
-	
 
 	#returns ARray of all Strin gs
 	def GetAll
@@ -84,36 +73,36 @@ class Trie
 
 	def GetAllWords(node, currWord= "")
 		words = []
-		if (node.GetData == true)
-			words +=[(currWord + node.GetIndex.to_s)]
+		if (node.data == true)
+			words +=[(currWord + node.ident.to_s)]
 		end
-		if node.NodeList.size == 0
+		if node.nodelist.size == 0
 			return words
 		end		
-		currWord += node.GetIndex.to_s
-		myNodeArray = node.NodeList
+		currWord += node.ident.to_s
+		myNodeArray = node.nodelist
 		myNodeArray.each do |key, n|
 		
-			words += GetAllWords(n, currWord.to_s)
+			words += GetAllWords(n, currWord)
 		end		
 		words
 	end
 
 	##To output all of the words! in strings
 	def to_s
-		to_sHelper(@root, "")
+		to_sHelper(@root)
 	end
 	
 	def to_sHelper(node,currWord="")
 		results = ""
-		if (node.GetData == true) #if this node is the endpoint of a word
-			results = currWord + node.GetIndex.to_s + "\n"
+		currWord += node.ident.to_s
+		if (node.data == true) #if this node is the endpoint of a word
+			results = currWord + "\n"
 		end
-		if node.NodeList.size > 0
-			currWord += node.GetIndex.to_s
-			myNodeArray = node.NodeList
+		if node.nodelist.size > 0			
+			myNodeArray = node.nodelist
 			myNodeArray.each do |key, n|
-				results = results + to_sHelper(n, currWord.to_s)
+				results = results + to_sHelper(n, currWord)
 			end	
 		end	
 		
@@ -156,15 +145,16 @@ filename = "wordsEn.txt"
 myTrie = Trie.new
 myTrie.AddFile(filename)
 guess = ""
-puts myTrie.FindPossibles("dn").to_s #findall the possibles
+puts myTrie.FindPossibles("dn").to_s #findall the possibles starting with dn
 while guess != "qqq"
 	puts "Enter some letters or qqq to quit"
 	guess = gets.chomp
 	autoc = myTrie.FindPossibles(guess)
-	if autoc.size == 0
-		puts "No Such Possibilities"
-	else 
+	if autoc.size != 0
 		puts autoc.to_s
+	else 
+		puts "No Such Possibilities"
 	end
 end 
+		
 		
