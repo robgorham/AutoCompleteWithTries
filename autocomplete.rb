@@ -1,41 +1,42 @@
-class Trie
-
-	class Node
-		def initialize(identifier = '')
-			@ident = identifier
-			@nodelist = {}
-			@data =false
-		end
-
-		def AddNode(key, newLeaf)
-			if @nodelist[key] == nil
-				@nodelist[key] = newLeaf				
-			end
-			puts "added #{newLeaf.GetIndex()}"
-			@nodelist[key]
-		end
-
-		def SetData(data)
-			@data = data
-		end
-
-
-		def GetNode(key)
-			@nodelist[key]
-		
-		end
-		def GetData()
-			@data
-		end
-
-		def NodeList()
-			@nodelist
-		end
-
-		def GetIndex()
-			@ident
-		end
+class Node
+	def initialize(identifier = '')
+		@ident = identifier
+		@nodelist = {}
+		@data =false
 	end
+
+	def AddNode(key, newLeaf)
+		if @nodelist[key] != nil
+			return @nodelist[key]
+		end
+		@nodelist[key] = Node.new(key)		
+		puts "added to node"
+		
+		@nodelist[key]
+	end
+
+	def SetData(data)
+		@data = data
+	end
+
+
+	def GetNode(idx)
+		@nodelist[idx]
+	
+	end
+	def GetData()
+		@data
+	end
+
+	def NodeList()
+		@nodelist
+	end
+
+	def GetIndex()
+		@ident
+	end
+end	
+class Trie
 
 	def initialize()
 		@root = Node.new
@@ -44,7 +45,7 @@ class Trie
 
 	def AddWord(word)
 		AddWordHelper(word, word,@root)
-		puts "added#{word}" + @root.NodeList.size.to_s
+		puts "added#{word} in AddWord " + @root.NodeList.size.to_s
 	end
 
 	def AddWordHelper(word, wordsleft,currNode )
@@ -68,14 +69,8 @@ class Trie
 	def GetAllWords(node = @root, currWord= "")
 		words = []
 		puts "getwords"
-		if node != nil
+		if node.GetData() || (node.NodeList().size == 0)
 			currWord = currWord + node.GetIndex().to_s
-			return
-		end
-		if node == nil
-			return
-		end
-		if node.GetData()
 			words << currWord
 		end
 		if node.NodeList() != {}
@@ -86,26 +81,23 @@ class Trie
 		words
 	end
 
-	def to_s(node=@root ,currWord="")
-		res = ""
-		puts "to_s"
-		if node != nil
-			currWord = currWord + node.GetIndex().to_s
-			return
-		end
-		if node == nil
-			return
-		end
+	def to_s()
+		to_sHelper(@root, "")
+	end
+	def to_sHelper(node,currWord="")
+		#puts currWord		
+		#puts node.GetIndex()						
 		if node.GetData()
-			res = currWord
+			currWord = currWord + node.GetIndex().to_s
 		end
-		if node.NodeList() != {}
-			node.NodeList.each do |nextNode|
-				puts " search"
-				res += res to_s(nextNode,currWord )+ " "
+		if node.NodeList().size > 0
+			myNodeArray = node.NodeList()
+			myNodeArray.each do |key, n|
+				#puts " search #{key}"
+				currWord = currWord + to_sHelper(n, currWord.to_s+key.to_s)+ " "
 			end
 		end
-		res
+		currWord
 	end
 
 	def FindPossibleHelper(charLeft, currNode = @root, results = [])
@@ -130,8 +122,10 @@ end
 
 myTrie = Trie.new
 myTrie.AddWord("Robert")
-myTrie.AddWord("Rodney")
+=begin myTrie.AddWord("Rodney")
 myTrie.AddWord("Hello")
 myTrie.AddWord("Rodney DangerField")
-#puts myTrie.FindPossible("R")
+myTrie.AddWord("Felecia")
+=end #puts myTrie.FindPossible("R")
+myTrie.PrintRoot()
 puts myTrie.to_s()
