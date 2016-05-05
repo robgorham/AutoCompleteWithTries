@@ -53,6 +53,16 @@ class Trie
 		AddWordHelper(word, word,@root)
 	end
 
+
+	def AddFile(filename)
+		dict = open(filename)
+		words = dict.read()
+		list = words.split("\n")
+		list.each do |word|
+			AddWord(word)
+		end
+	end
+
 	def AddWordHelper(word, wordsleft,currNode )
 
 		if wordsleft.size == 0
@@ -105,17 +115,17 @@ class Trie
 	end
 
 	def FindPossibles(guess) #find all possible words given a guess
-		possibleNode = FindPossibleHelper(guess,@root)
+		possibleNode = FindPossibleHelper(guess,@root) #find the node that corresponds to the guess
 		if possibleNode == nil
 			return []
 		end
-		words = GetAllWords(possibleNode)
+		words = GetAllWords(possibleNode)#find all children
 		(0...words.size).each do |i|
 			words[i] = guess[0...guess.size-1] + words[i]
 		end
 		words
 	end
-	def FindPossibleHelper(charLeft, currNode)
+	def FindPossibleHelper(charLeft, currNode)#travels out to the branch needed... RO in the ROBERT tree. then returns that Node
 		if currNode == nil
 			return nil
 		end
@@ -130,14 +140,21 @@ class Trie
 	
 end
 
+
+filename = "wordsEn.txt"
+
 myTrie = Trie.new
-myTrie.AddWord("Dennis") #how you add words
-myTrie.AddWord("Robert")
- myTrie.AddWord("Rodney")
-myTrie.AddWord("Hello")
-myTrie.AddWord("Rodney DangerField")
-myTrie.AddWord("Felecia")
-myTrie.AddWord("Roxanne")
-myTrie.AddWord("Robot")
-puts myTrie.FindPossibles("Rob").to_s #findall the possibles
-puts myTrie.to_s
+myTrie.AddFile(filename)
+guess = ""
+puts myTrie.FindPossibles("dn").to_s #findall the possibles
+while guess != "qqq"
+	puts "Enter some letters or qqq to quit"
+	guess = gets.chomp
+	autoc = myTrie.FindPossibles(guess)
+	if autoc.size == 0
+		puts "No Such Possibilities"
+	else 
+		puts autoc.to_s
+	end
+end 
+		
