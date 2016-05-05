@@ -48,12 +48,7 @@ class Trie
 		@root = Node.new
 	end
 
-	#adds word to Structure
-	def AddWord(word)
-		AddWordHelper(word, word,@root)
-	end
-
-
+	
 	def AddFile(filename)
 		dict = open(filename)
 		words = dict.read()
@@ -63,6 +58,11 @@ class Trie
 		end
 	end
 
+	#adds word to Structure
+	def AddWord(word)
+		AddWordHelper(word, word,@root)
+	end
+	
 	def AddWordHelper(word, wordsleft,currNode )
 
 		if wordsleft.size == 0
@@ -72,6 +72,9 @@ class Trie
 		temp = currNode.AddNode(wordsleft[0], Node.new(wordsleft[0]))
 		AddWordHelper(word,wordsleft[1...word.size], currNode.AddNode(temp.GetIndex, temp))
 	end
+
+	
+	
 
 	#returns ARray of all Strin gs
 	def GetAll()
@@ -99,6 +102,7 @@ class Trie
 	def to_s()
 		to_sHelper(@root, "")
 	end
+	
 	def to_sHelper(node,currWord="")
 		results = ""
 		if (node.GetData() == true) #if this node is the endpoint of a word
@@ -111,6 +115,7 @@ class Trie
 				results = results + to_sHelper(n, currWord.to_s)
 			end	
 		end	
+		
 		results
 	end
 
@@ -123,8 +128,10 @@ class Trie
 		(0...words.size).each do |i|
 			words[i] = guess[0...guess.size-1] + words[i]
 		end
+		
 		words
 	end
+	
 	def FindPossibleHelper(charLeft, currNode)#travels out to the branch needed... RO in the ROBERT tree. then returns that Node
 		if currNode == nil
 			return nil
@@ -132,8 +139,10 @@ class Trie
 		if charLeft.size == 0
 			return currNode
 		end
+		
 		FindPossibleHelper(charLeft[1...charLeft.size],currNode.GetNode(charLeft[0]))
 	end
+	
 	def FindNode(key, currNode)
 		FindPossibleHelper(key, @root)
 	end
